@@ -4,39 +4,31 @@
       <div class="display-2 mb-5 text-xs-center">{{ title }}</div>
     </v-flex>
     <v-flex xs12>
-      <Carousel :feedbacks="feedbacks"></Carousel>
-    </v-flex>
-    <v-flex xs12>
-      <Dialog></Dialog>
+      <app-spinner v-if="!loadedFeeds"></app-spinner>
+      <Slider v-if="loadedFeeds" :feedbacks="loadedFeeds"></Slider>
     </v-flex>
   </v-layout>
 </template>
 
 <script>
-  import Carousel from '@/components/Partials/Carousel'
-  import Dialog from '@/components/Partials/Dialogs/Dialog'
+  import Slider from '../Carousel/Slider';
   export default{
     name: 'feedbacks',
-    components:{ Carousel, Dialog },
+    components:{ Slider },
     data(){
       return{
         title: 'What they say',
-        feeds: [],
-        model: null
+        model: null,
       }
     },
     computed:{
-      feedbacks(){
-        return this.$store.getters.loadedFeedbacks
-      }
-    },
-    methods:{
-      loadFeedbacks(){
-        this.$store.dispatch('loadFeedbacks');
+      loadedFeeds(){
+        return this.$store.state.feeds
       }
     },
     mounted(){
-      this.loadFeedbacks()
+      this.$store.dispatch('loadFeeds');
     }
   }
 </script>
+

@@ -2,6 +2,15 @@
   <v-layout row wrap>
     <swiper :options="swiperOption" class="py-3 mb-3" v-match-heights="v_match">
       <slide v-for="feed in feedbacks" :key="feed.id" :feed="feed"></slide>
+      <swiper-slide v-if="feedbacks">
+        <v-card class="pa-3 text-xs-center" height="150">
+          <div class="black--text headline">Share your experience with us!</div>
+          <div>
+            <FeedbackDialog v-if="user" />
+            <span class="grey--text" v-if="!user">Please, login to leave a feedback</span>
+          </div>
+        </v-card>
+      </swiper-slide>
       <div slot="button-prev" class="slider-action arrow-btn-left">
         <v-btn icon>
           <v-icon>arrow_back</v-icon>
@@ -19,10 +28,11 @@
 
 <script>
   import Slide from "./Slide";
+  import FeedbackDialog from "../Dialogs/FeedbackDialog";
   export default {
     name: 'carousel',
     props: ['feedbacks'],
-    components: { Slide },
+    components: { Slide, FeedbackDialog },
     data() {
       return {
         v_match:{
@@ -64,6 +74,11 @@
             }
           }
         }
+      }
+    },
+    computed:{
+      user(){
+        return this.$store.getters.user
       }
     }
   }
@@ -108,5 +123,8 @@
   }
   .swiper-pagination{
     padding:15px auto;
+  }
+  .swiper-pagination-bullets .swiper-pagination-bullet-active{
+    background-color: #000;
   }
 </style>
